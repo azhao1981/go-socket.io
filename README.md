@@ -7,19 +7,20 @@ go-socket.io is an implementation of [socket.io](http://socket.io) in golang, wh
 It is compatible with latest implementation of socket.io in node.js, and supports room and namespace.
 
 * for compatability with socket.io 0.9.x, please use branch 0.9.x *
+* namespace googollee 版本的namespace 不能使用
 
 ## Install
 
 Install the package with:
 
 ```bash
-go get github.com/googollee/go-socket.io
+go get github.com/azhao1981/go-socket.io
 ```
 
 Import it with:
 
 ```go
-import "github.com/googollee/go-socket.io"
+import "github.com/azhao1981/go-socket.io"
 ```
 
 and use `socketio` as the package name inside the code.
@@ -119,6 +120,26 @@ so.Emit("some:event", dataForClient, func (so socketio.Socket, data string) {
 	log.Println("Client ACK with data: ", data)
 })
 ```
+
+##### namespace
+
+	原版有namespace的原型,却不真正支持,没有 namespace 的socket.io是不能使用的,这里先hack一下
+
+	```
+	server.On("connection", func(so socketio.Socket) {
+		log.Println("on connection")
+		so.Join("chat")
+		so.On("chat message", func(msg string) {
+			if so.Namespace() == "/xxx" {
+				log.Println("emit:", so.Emit("chat message", msg))
+				so.BroadcastTo("chat", "chat message", msg)
+			}
+		})
+		so.On("disconnection", func() {
+			log.Println("on disconnect")
+		})
+	})
+	```
 
 ## License
 

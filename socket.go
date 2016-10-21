@@ -13,6 +13,9 @@ type Socket interface {
 	// Id returns the session id of socket.
 	Id() string
 
+	// Namespace returns the session id of socket.
+	Namespace() string
+
 	// Rooms returns the rooms name joined now.
 	Rooms() []string
 
@@ -53,6 +56,10 @@ func newSocket(conn engineio.Conn, base *baseHandler) *socket {
 
 func (s *socket) Id() string {
 	return s.conn.Id()
+}
+
+func (s *socket) Namespace() string {
+	return s.namespace
 }
 
 func (s *socket) Request() *http.Request {
