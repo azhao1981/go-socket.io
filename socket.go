@@ -15,6 +15,7 @@ type Socket interface {
 
 	// Namespace returns the session id of socket.
 	Namespace() string
+	SetNamespace(nsp string) string
 
 	// Rooms returns the rooms name joined now.
 	Rooms() []string
@@ -59,6 +60,11 @@ func (s *socket) Id() string {
 }
 
 func (s *socket) Namespace() string {
+	return s.namespace
+}
+
+func (s *socket) SetNamespace(nsp string) string {
+	s.namespace = nsp
 	return s.namespace
 }
 
