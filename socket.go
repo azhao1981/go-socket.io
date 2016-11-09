@@ -1,10 +1,10 @@
 package socketio
 
 import (
+	"fmt"
+	"github.com/azhao1981/go-engine.io"
 	"net/http"
 	"sync"
-
-	"github.com/azhao1981/go-engine.io"
 )
 
 // Socket is the socket object of socket.io.
@@ -12,6 +12,8 @@ type Socket interface {
 
 	// Id returns the session id of socket.
 	Id() string
+
+	Mark() string
 
 	// Namespace returns the session id of socket.
 	Namespace() string
@@ -29,6 +31,8 @@ type Socket interface {
 	// Emit emits an event with given args.
 	Emit(event string, args ...interface{}) error
 
+	Close()
+
 	// Join joins the room.
 	Join(room string) error
 
@@ -45,6 +49,7 @@ type socket struct {
 	namespace string
 	id        int
 	mu        sync.Mutex
+	ConnNum   int
 }
 
 func newSocket(conn engineio.Conn, base *baseHandler) *socket {
@@ -57,6 +62,10 @@ func newSocket(conn engineio.Conn, base *baseHandler) *socket {
 
 func (s *socket) Id() string {
 	return s.conn.Id()
+}
+
+func (s *socket) Mark() string {
+	return fmt.Sprintf("%s-%d", s.Id(), s.ConnNum)
 }
 
 func (s *socket) Namespace() string {
@@ -80,6 +89,10 @@ func (s *socket) Emit(event string, args ...interface{}) error {
 		s.conn.Close()
 	}
 	return nil
+}
+
+func (s *socket) Close() {
+	s.conn.Close()
 }
 
 func (s *socket) send(args []interface{}) error {

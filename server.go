@@ -98,7 +98,9 @@ func (s *Server) loop() {
 		if err != nil {
 			return
 		}
+		num := s.eio.Count()
 		s := newSocket(conn, s.baseHandler)
+		s.ConnNum = num
 		go func(s *socket) {
 			s.loop()
 		}(s)
