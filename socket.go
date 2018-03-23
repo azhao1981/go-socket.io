@@ -50,6 +50,7 @@ type socket struct {
 	id        int
 	mu        sync.Mutex
 	ConnNum   int
+	UserID    string
 }
 
 func newSocket(conn engineio.Conn, base *baseHandler) *socket {
