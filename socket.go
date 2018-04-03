@@ -41,6 +41,10 @@ type Socket interface {
 
 	// BroadcastTo broadcasts an event to the room with given args.
 	BroadcastTo(room, event string, args ...interface{}) error
+	
+	GetUserID() string
+
+	InitUserID(userID string)
 }
 
 type socket struct {
@@ -94,6 +98,14 @@ func (s *socket) Emit(event string, args ...interface{}) error {
 
 func (s *socket) Close() {
 	s.conn.Close()
+}
+
+func (s *socket) GetUserID() string {
+	return s.UserID
+}
+
+func (s *socket) InitUserID(userID string) {
+	s.UserID = userID
 }
 
 func (s *socket) send(args []interface{}) error {
